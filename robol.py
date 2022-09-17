@@ -19,6 +19,12 @@ class BinaryOp(Enum):
     EQUALS = 6
 
 
+@unique
+class Assign(Enum):
+    INC = 1
+    DEC = 2
+
+
 class Robol(ABC):
 
     @abstractmethod
@@ -34,52 +40,81 @@ class Program(Robol):
 
     
     def interpret(self):
-        pass
+        self.robot.grid = self.grid
+        self.robot.interpret()
 
 
 class Grid(Robol):
 
-    def __init__(self, x: Expression, y: Expression):
-        self.x = x
-        self.y = y
+    def __init__(self, east: Expression, north: Expression, r: Robot):
+        self.east = east
+        self.north = north
+        self.r = r
 
     def interpret(self):
-        pass
+        self.r.stack.append(self.north)
+        self.r.stack.append(self.east)
 
 
 class Robot(Robol):
 
-    def __init__(self, bindings: Dict[Binding], start: Start,\
-            statements: List[Statement], grid: Grid):
-        self.bindings = bindings
-        self.start = start
-        self.statements = statements
-        self.grid = grid
+    def __init__(self):
+        self.binding_list = None
+        self.start = None
+        self.statements = None
+        self.grid = None
         self.stack = []
         self.bindings = {}
+        self.position = {
+                "east": 0,
+                "north": 0
+                }
+        self.direction = 0
+
 
     def interpret(self):
-        pass
+        if self.binding_list:
+            for i in self.binding_list:
+                i.interpret()
+        if self.start:
+            self.start.interpret()
+        if self.statements:
+            for i in self.statements:
+                i.interpret()
 
 
 class Start:
 
-    def __init__(self, x: Expression, y: Expression):
-        self.x = x
-        self.y = y
+    def __init__(self, east: Expression, north: Expression, r: Robot):
+        self.east = east
+        self.north = north
+        self.r = r
 
-    def interpret():
-        pass
+    def interpret(self):
+        self.east.interpret()
+        self.r.position["east"] = self.r.stack.pop()
+        print(f"Position East: {self.r.position['east']}")
+
+        self.north.interpret()
+        self.r.position["north"] = self.r.stack.pop()
+        print(f"Position North: {self.r.position['north']}")
 
 
 class Binding(Robol):
 
-    def __init__(self, ident: Identifier, exp: Expression):
+    def __init__(self, ident: Identifier, exp: Expression, r: Robot):
         self.ident = ident
         self.exp = exp
+        self.r = r
 
     def interpret(self):
-        pass
+        self.ident.interpret()
+        ident = self.r.stack.pop()
+
+        self.exp.interpret()
+        exp = self.r.stack.pop()
+
+        self.r.bindings[ident] = exp
 
 
 # Statement and subclasses
@@ -92,8 +127,22 @@ class Statement(Robol, ABC):
 
 class Assignment(Statement):
 
+    def __init__(self, identifer: Identifier, assign: Assign, r: Robot):
+        self.identifier = identifier
+        self.assign = assign
+        self.r = r
+
     def interpret(self):
-        pass
+        self.identifier.interpret()
+        ident = self.r.stack.pop()
+
+        match self.assign:
+            case Assign.INC:
+                self.r.bindings[ident] += 1
+            case Assign.DEC:
+                self.r.bindings[ident] -= 1
+            case _:
+                raise Exception("Something went wrong in Assignment")
 
 
 class Loop(Statement):
@@ -109,29 +158,51 @@ class Loop(Statement):
 
 
 class Stop(Statement):
+
+    def __init__(self, r: Robot):
+        self.r = r
+
     def interpret(self):
-        pass
+        print(f"Position: ({self.r.position['east']}, {self.r.position['north']})")
 
 
 class Turn(Statement):
 
-    def __init__(self, direction: Direction):
+    def __init__(self, direction: Direction, r: Robot):
         self.direction = direction
+        self.r = r
 
     def interpret(self):
-        pass
+        match self.direction:
+            case Direction.CLOCKWISE:
+                self.r.direction = (self.r.direction + 1) % 4
+            case Direction.COUNTERCLOCKWISE:
+                self.r.direction = (self.r.direction - 1) % 4
+        print(f"Direction: {self.r.direction}")
 
 
 class Step(Statement):
 
-    def __init__(self, exp: Expression):
+    def __init__(self, exp: Expression, r: Robot):
         self.exp = exp
+        self.r = r
 
     def interpret(self):
-        pass
+        self.exp.interpret()
+        exp = self.r.stack.pop()
+        print(f"Steps: {exp}")
+        match self.r.direction:
+            case 0:
+                self.r.position["east"] += exp
+            case 1:
+                self.r.position["north"] -= exp
+            case 2:
+                self.r.position["east"] -= exp
+            case 3:
+                self.r.position["north"] += exp
 
 
-
+# Expressions and subclasses
 class Expression(ABC):
 
     @abstractmethod

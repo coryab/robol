@@ -52,8 +52,10 @@ class Grid(Robol):
         self.r = r
 
     def interpret(self):
-        self.r.stack.append(self.north)
-        self.r.stack.append(self.east)
+        self.east.interpret()
+        self.r.stack.append(self.r.stack.pop())
+        self.north.interpret()
+        self.r.stack.append(self.r.stack.pop())
 
 
 class Robot(Robol):
@@ -93,11 +95,10 @@ class Start:
     def interpret(self):
         self.east.interpret()
         self.r.position["east"] = self.r.stack.pop()
-        print(f"Position East: {self.r.position['east']}")
 
         self.north.interpret()
         self.r.position["north"] = self.r.stack.pop()
-        print(f"Position North: {self.r.position['north']}")
+        print(f"Start position: ({self.r.position['east']}, {self.r.position['north']})")
 
 
 class Binding(Robol):
@@ -127,7 +128,7 @@ class Statement(Robol, ABC):
 
 class Assignment(Statement):
 
-    def __init__(self, identifer: Identifier, assign: Assign, r: Robot):
+    def __init__(self, identifier: Identifier, assign: Assign, r: Robot):
         self.identifier = identifier
         self.assign = assign
         self.r = r
@@ -147,14 +148,21 @@ class Assignment(Statement):
 
 class Loop(Statement):
 
-    def __init__(self, statements: List[Statement], condition: BoolExp):
+    def __init__(self, statements: List[Statement], condition: BoolExp,\
+            r: Robot):
         self.statements = statements
         self.condition = condition
+        self.r = r
 
     def interpret(self):
-        while self.condition.interpret():
+        while True:
             for i in self.statements:
                 i.interpret()
+
+            self.condition.interpret()
+            bool_val = self.r.stack.pop()
+            if bool_val == 0:
+                break
 
 
 class Stop(Statement):
@@ -163,7 +171,7 @@ class Stop(Statement):
         self.r = r
 
     def interpret(self):
-        print(f"Position: ({self.r.position['east']}, {self.r.position['north']})")
+        print(f"End position: ({self.r.position['east']}, {self.r.position['north']})\n\n")
 
 
 class Turn(Statement):
@@ -190,15 +198,30 @@ class Step(Statement):
     def interpret(self):
         self.exp.interpret()
         exp = self.r.stack.pop()
+        if type(self.exp) is Identifier:
+            exp = self.r.bindings[exp]
+
+        self.r.grid.interpret()
+        grid_east = self.r.stack.pop()
+        grid_north = self.r.stack.pop()
+
         print(f"Steps: {exp}")
         match self.r.direction:
             case 0:
+                if self.r.position["east"] + exp > grid_east:
+                    raise Exception("The bounds of the grid have been overstepped")
                 self.r.position["east"] += exp
             case 1:
+                if self.r.position["north"] - exp < 0:
+                    raise Exception("The bounds of the grid have been overstepped")
                 self.r.position["north"] -= exp
             case 2:
+                if self.r.position["east"] - exp < 0:
+                    raise Exception("The bounds of the grid have been overstepped")
                 self.r.position["east"] -= exp
             case 3:
+                if self.r.position["north"] + exp > grid_north:
+                    raise Exception("The bounds of the grid have been overstepped")
                 self.r.position["north"] += exp
 
 
@@ -212,7 +235,7 @@ class Expression(ABC):
 
 class ArithmeticExp(Expression):
 
-    def __init__(self, op: BinaryOp, left: expression, right: Expression,\
+    def __init__(self, op: BinaryOp, left: Expression, right: Expression,\
             r: Robot):
         self.op = op
         self.left = left
@@ -222,9 +245,13 @@ class ArithmeticExp(Expression):
     def interpret(self):
         self.left.interpret()
         left = self.r.stack.pop()
+        if type(self.left) is Identifier:
+            left = self.r.bindings[left]
 
         self.right.interpret()
         right = self.r.stack.pop()
+        if type(self.right) is Identifier:
+            right = self.r.bindings[right]
 
         out = None
         match self.op:
@@ -254,9 +281,13 @@ class BoolExp(Expression):
     def interpret(self):
         self.left.interpret()
         left = self.r.stack.pop()
+        if type(self.left) is Identifier:
+            left = self.r.bindings[left]
 
         self.right.interpret()
         right = self.r.stack.pop()
+        if type(self.right) is Identifier:
+            right = self.r.bindings[right]
 
         out = None
         match self.op:

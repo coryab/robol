@@ -61,9 +61,9 @@ class Grid(Robol):
 class Robot(Robol):
 
     def __init__(self):
-        self.binding_list = None
+        self.binding_list = []
         self.start = None
-        self.statements = None
+        self.statements = []
         self.grid = None
         self.stack = []
         self.bindings = {}
@@ -306,7 +306,7 @@ class BoolExp(Expression):
 class NumberExp(Expression):
 
     def __init__(self, val: int, r: Robot):
-       self.val = val
+       self.val = int(val)
        self.r = r
 
     def interpret(self):

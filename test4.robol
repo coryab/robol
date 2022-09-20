@@ -1,0 +1,7 @@
+size(64*64)
+let i = 8
+start(1,1)
+do {
+    step i
+} while < i 100
+stop

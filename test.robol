@@ -1,0 +1,12 @@
+size(64*64)
+start(23,30)
+turn clockwise
+turn clockwise
+step 15
+turn counterclockwise
+step 15
+turn counterclockwise
+step + 2 3
+turn counterclockwise
+step + 17 20
+stop

@@ -1,0 +1,13 @@
+size(64*64)
+let i = 5
+let j = 3
+start(23,6)
+turn counterclockwise
+step * 3 i
+turn clockwise
+step 15       
+turn clockwise
+step - - 12 i j      
+turn clockwise
+step + (* 2 i) + (* 3 j) 1
+stop

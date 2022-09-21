@@ -1,0 +1,15 @@
+size(128*128)
+let i = 2
+let j = 9
+start(50,67)
+step - (+ i 50) j
+turn clockwise
+step - j i
+turn counterclockwise
+do {
+    step i
+    i++
+} while < i j
+turn counterclockwise
+step * 2 j
+stop

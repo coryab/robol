@@ -1,0 +1,20 @@
+# This is a comment
+/*
+This is a 
+multiline comment.
+*/
+size(64*64)
+let i = 0
+start(32,32)
+do {
+    let j = 0
+    do {
+        step 1
+        j++
+    } while < j 3
+    turn counterclockwise
+    step i
+    turn clockwise
+    i++
+} while < i 3
+stop

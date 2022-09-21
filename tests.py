@@ -1,185 +1,142 @@
 # Import block
 from typing import List
-from robol import *
+import sys
+
+from robol_lang import *
+
 
 class TestCode:
     def __init__(self):
         pass
 
     def test1(self):
-        robot: Robot = Robot()
-        grid: Grid = Grid(NumberExp(64, robot), NumberExp(64, robot), robot)
-        start: Start = Start(NumberExp(23, robot), NumberExp(30, robot), robot)
-        statements: List = []
-        statements.append(Turn(Direction.CLOCKWISE, robot))
-        statements.append(Turn(Direction.CLOCKWISE, robot))
-        statements.append(Step(NumberExp(15, robot), robot))
-        statements.append(Turn(Direction.COUNTERCLOCKWISE, robot))
-        statements.append(Step(NumberExp(15, robot), robot))
-        statements.append(Turn(Direction.COUNTERCLOCKWISE, robot))
-        statements.append(Step(ArithmeticExp(BinaryOp.PLUS,\
-                NumberExp(2, robot), NumberExp(3, robot), robot), robot))
-        statements.append(Turn(Direction.COUNTERCLOCKWISE, robot))
-        statements.append(Step(ArithmeticExp(BinaryOp.PLUS,\
-                NumberExp(17, robot), NumberExp(20, robot), robot), robot))
-        statements.append(Stop(robot))
 
-        robot.start = start
-        robot.statements = statements
-        program: Program = Program(grid, robot)
 
-        program.interpret()
+        p: Program = Program()
+
+        p.add_robot(Robot())
+
+        p.add_grid(Grid(NumberExp(64), NumberExp(64)))
+
+        p.add_statement(Start(NumberExp(23), NumberExp(30)))
+        p.add_statement(Turn(Direction.CLOCKWISE))
+        p.add_statement(Turn(Direction.CLOCKWISE))
+        p.add_statement(Step(NumberExp(15)))
+        p.add_statement(Turn(Direction.COUNTERCLOCKWISE))
+        p.add_statement(Step(NumberExp(15)))
+        p.add_statement(Turn(Direction.COUNTERCLOCKWISE))
+        p.add_statement(Step(ArithmeticExp(BinaryOp.PLUS, NumberExp(2), NumberExp(3))))
+        p.add_statement(Turn(Direction.COUNTERCLOCKWISE))
+        p.add_statement(Step(ArithmeticExp(BinaryOp.PLUS, NumberExp(17), NumberExp(20))))
+        p.add_statement(Stop())
+
+
+        p.interpret()
 
 
     def test2(self):
-        robot: Robot = Robot()
-        grid: Grid = Grid(NumberExp(64, robot), NumberExp(64, robot), robot) 
-        bindings = []
-        bindings.append(Binding(Identifier("i", robot), NumberExp(5, robot),\
-                robot))
-        bindings.append(Binding(Identifier("j", robot), NumberExp(3, robot),\
-                robot))
-        start: Start = Start(NumberExp(23, robot), NumberExp(6, robot), robot)
-        statements = []
-        statements.append(Turn(Direction.COUNTERCLOCKWISE, robot))
-        statements.append(Step(
-            ArithmeticExp(
-                BinaryOp.MULT, 
-                NumberExp(3, robot),
-                Identifier("i", robot),
-                robot), robot))
-        statements.append(Turn(Direction.CLOCKWISE, robot))
-        statements.append(Step(NumberExp(15, robot), robot))
-        statements.append(Turn(Direction.CLOCKWISE, robot))
-        statements.append(Step(
+
+        p: Program = Program()
+
+        p.add_robot(Robot())
+
+        p.add_grid(Grid(NumberExp(64), NumberExp(64)))
+        p.add_statement(Binding(Identifier("i"), NumberExp(5)))
+        p.add_statement(Binding(Identifier("j"), NumberExp(3)))
+        p.add_statement(Start(NumberExp(23), NumberExp(6)))
+        p.add_statement(Turn(Direction.COUNTERCLOCKWISE))
+        p.add_statement(Step(ArithmeticExp(BinaryOp.MULT, NumberExp(3), Identifier("i"))))
+        p.add_statement(Turn(Direction.CLOCKWISE))
+        p.add_statement(Step(NumberExp(15)))
+        p.add_statement(Turn(Direction.CLOCKWISE))
+        p.add_statement(Step(
             ArithmeticExp(
                 BinaryOp.MINUS,
-                ArithmeticExp(
-                    BinaryOp.MINUS,
-                    NumberExp(12, robot),
-                    Identifier("i", robot),
-                    robot
-                    ),
-                Identifier("j", robot),
-                robot
-                ),
-            robot
+                ArithmeticExp(BinaryOp.MINUS, NumberExp(12), Identifier("i")),
+                Identifier("j")
+                )
             )
         )
-        statements.append(Turn(Direction.CLOCKWISE, robot))
-        statements.append(Step(
+        p.add_statement(Turn(Direction.CLOCKWISE))
+        p.add_statement(Step(
             ArithmeticExp(
                 BinaryOp.PLUS,
                 ArithmeticExp(
                     BinaryOp.MULT,
-                    NumberExp(2, robot),
-                    Identifier("i", robot),
-                    robot
-                    ),
+                    NumberExp(2),
+                    Identifier("i")
+                ),
                 ArithmeticExp(
                     BinaryOp.PLUS,
                     ArithmeticExp(
                         BinaryOp.MULT,
-                        NumberExp(3, robot),
-                        Identifier("j", robot),
-                        robot
-                        ),
-                    NumberExp(1, robot),
-                    robot
+                        NumberExp(3),
+                        Identifier("j")
                     ),
-                robot
+                    NumberExp(1),
                 ),
-            robot
-            )
-        )
-        statements.append(Stop(robot))
+            ),
+        ))
+        p.add_statement(Stop())
         
-        robot.binding_list = bindings
-        robot.start = start
-        robot.statements = statements
-
-        program: Program = Program(grid, robot)
-        program.interpret()
+        p.interpret()
 
 
     def test3(self):
         
-        robot: Robot = Robot()
-        grid: Grid = Grid(NumberExp(64, robot), NumberExp(64, robot), robot) 
-        bindings = []
-        bindings.append(Binding(Identifier("i", robot), NumberExp(5, robot),\
-                robot))
-        bindings.append(Binding(Identifier("j", robot), NumberExp(3, robot),\
-                robot))
-        start: Start = Start(NumberExp(23, robot), NumberExp(6, robot), robot)
-        statements = []
-        statements.append(Turn(Direction.COUNTERCLOCKWISE, robot))
-        statements.append(Step(
+        p: Program = Program()
+
+        p.add_robot(Robot())
+
+        p.add_grid(Grid(NumberExp(64), NumberExp(64)))
+
+        p.add_statement(Binding(Identifier("i"), NumberExp(5)))
+        p.add_statement(Binding(Identifier("j"), NumberExp(3)))
+        p.add_statement(Start(NumberExp(23), NumberExp(6)))
+        p.add_statement(Turn(Direction.COUNTERCLOCKWISE))
+        p.add_statement(Step(
             ArithmeticExp(
                 BinaryOp.MULT, 
-                NumberExp(3, robot),
-                Identifier("i", robot),
-                robot), robot))
-        statements.append(Turn(Direction.COUNTERCLOCKWISE, robot))
-        statements.append(Step(NumberExp(15, robot), robot))
-        statements.append(Turn(Direction.CLOCKWISE, robot))
-        statements.append(Turn(Direction.CLOCKWISE, robot))
-        statements.append(Step(NumberExp(4, robot), robot))
-        statements.append(Turn(Direction.CLOCKWISE, robot))
-        statements.append(Loop(
-                [
-                    Step(Identifier("j", robot), robot),
-                    Assignment(Identifier("j", robot), Assign.DEC, robot)
-                ],
-                BoolExp(
-                    BinaryOp.GREATER,
-                    Identifier("j", robot),
-                    NumberExp(1, robot),
-                    robot
-                ),
-                robot
+                NumberExp(3),
+                Identifier("i"),
             )
-        )
-        statements.append(Stop(robot))
-        
-        robot.binding_list = bindings
-        robot.start = start
-        robot.statements = statements
+        ))
+        p.add_statement(Turn(Direction.COUNTERCLOCKWISE))
+        p.add_statement(Step(NumberExp(15)))
+        p.add_statement(Turn(Direction.CLOCKWISE))
+        p.add_statement(Turn(Direction.CLOCKWISE))
+        p.add_statement(Step(NumberExp(4)))
+        p.add_statement(Turn(Direction.CLOCKWISE))
 
-        program: Program = Program(grid, robot)
-        program.interpret()
+        loop = Loop()
+        loop.add_statement(Step(Identifier("j")))
+        loop.add_statement(Assignment(Identifier("j"), Assign.DEC))
+        loop.condition = BoolExp(BinaryOp.GREATER, Identifier("j"), NumberExp(1))
+        p.add_statement(loop)
+
+        p.add_statement(Stop())
+        
+        p.interpret()
 
 
     def test4(self):
 
-        robot: Robot = Robot()
-        grid: Grid = Grid(NumberExp(64, robot), NumberExp(64, robot), robot) 
-        bindings = []
-        bindings.append(Binding(Identifier("i", robot), NumberExp(8, robot),\
-                robot))
-        start: Start = Start(NumberExp(1, robot), NumberExp(1, robot), robot)
-        statements = []
-        statements.append(Loop(
-                [
-                    Step(Identifier("i", robot), robot),
-                ],
-                BoolExp(
-                    BinaryOp.LESS,
-                    Identifier("i", robot),
-                    NumberExp(100, robot),
-                    robot
-                ),
-                robot
-            )
-        )
-        statements.append(Stop(robot))
+        p: Program = Program()
 
-        robot.binding_list = bindings
-        robot.start = start
-        robot.statements = statements
+        p.add_robot(Robot())
 
-        program: Program = Program(grid, robot)
-        program.interpret()
+        p.add_grid(Grid(NumberExp(64), NumberExp(64)))
+
+        p.add_statement(Binding(Identifier("i"), NumberExp(8)))
+        p.add_statement(Start(NumberExp(1), NumberExp(1)))
+
+        loop = Loop()
+        loop.add_statement(Step(Identifier("i")))
+        loop.condition = BoolExp(BinaryOp.LESS, Identifier("i"), NumberExp(100))
+        p.add_statement(loop)
+        p.add_statement(Stop())
+
+        p.interpret()
 
 
     def test_all(self):
@@ -192,9 +149,21 @@ class TestCode:
 
 
 if __name__ == "__main__":
+    n = sys.argv[1]
+
     tests = TestCode()
-    #tests.test1()
-    #tests.test2()
-    #tests.test3()
-    #tests.test4()
-    tests.test_all()
+
+    match n:
+        case "test1":
+            tests.test1()
+        case "test2":
+            tests.test2()
+        case "test3":
+            tests.test3()
+        case "test4":
+            tests.test4()
+        case "test_all":
+            tests.test_all()
+        case _:
+            raise Exception("Invalid test")
+

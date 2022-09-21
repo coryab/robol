@@ -1,0 +1,184 @@
+#!/bin/env python
+
+from robol_lang import *
+
+import sys
+
+def build_exp(arr):
+    def helper(arr):
+        if " " in arr[0]:
+            arr = arr[0].split() + arr[1:]
+
+        if arr[0] in "*-+":
+            bin_op = None
+            match arr[0]:
+                case "*":
+                    bin_op = BinaryOp.MULT
+                case "-":
+                    bin_op = BinaryOp.MINUS
+                case "+":
+                    bin_op = BinaryOp.PLUS
+
+            left, rest_arr = helper(arr[1:])
+            right, rest = helper(rest_arr)
+            return ArithmeticExp(bin_op, left, right), rest
+        elif arr[0] in "<>=":
+            bin_op = None
+            match arr[0]:
+                case "<":
+                    bin_op = BinaryOp.LESS
+                case ">":
+                    bin_op = BinaryOp.GREATER
+                case "=":
+                    bin_op = BinaryOp.EQUALS
+            
+            left, rest_arr = helper(arr[1:])
+            right, rest = helper(rest_arr)
+            return BoolExp(bin_op, left, right), rest
+       
+        else:
+            n = arr[0]
+            res = None
+            try:
+                n = int(n)
+                res = NumberExp(n)
+            except:
+                res = Identifier(n)
+
+            return res, arr[1:]
+
+    return helper(arr)
+
+       
+def build_program(tokens: List, p: Program):
+
+    while tokens:
+        # Match
+        # print(tokens)
+        current = tokens.pop(0)
+        match current:
+            case "size":
+                dims = tokens.pop(0).split("*")
+                p.add_grid(Grid(NumberExp(dims[0]), NumberExp(dims[1])))
+            case "let":
+                binder = tokens.pop(0)
+                tokens.pop(0)
+                val = tokens.pop(0)
+                p.add_statement(
+                        Binding(
+                            Identifier(binder),
+                            NumberExp(val)
+                        )
+                )
+            case "start":
+                nums = tokens.pop(0).split(",")
+                p.add_statement(Start(NumberExp(nums[0]), NumberExp(nums[1])))
+            case "turn":
+                d = Direction.CLOCKWISE if tokens.pop(0) == "clockwise" else\
+                        Direction.COUNTERCLOCKWISE
+                p.add_statement(Turn(d))
+            case "step":
+                exp, arr = build_exp(tokens)
+                p.add_statement(Step(exp))
+                tokens = arr
+            case "do":
+                arr = []
+                tokens.pop(0)
+                token = tokens.pop(0)
+                open_braces = 1
+                while True:
+                    if token == "}":
+                        open_braces -= 1
+                    elif token == "{":
+                        open_braces += 1
+                    
+                    if open_braces <= 0:
+                        break
+                    arr.append(token)
+                    token = tokens.pop(0)
+                l = Loop()
+                build_program(arr, l)
+                tokens.pop(0)
+                exp, res_arr = build_exp(tokens)
+                l.condition = exp
+                tokens = res_arr
+                p.add_statement(l)
+
+            case s if "--" in s or "++" in s:
+                assign = Assign.INC if "++" in s else Assign.DEC
+                p.add_statement(Assignment(Identifier(s[0]), assign))
+            case "stop":
+                p.add_statement(Stop())
+
+
+
+if __name__ == "__main__":
+
+    p: Program = Program()
+    
+    p.add_robot(Robot())
+
+    statements = p.add_statement
+
+    with open(sys.argv[1], "r") as f:
+        string = f.read()
+
+        cursor = 0
+        buffer = ""
+        tokens = []
+        while cursor < len(string):
+            if string[cursor] in ", \n" and buffer != "":
+                if buffer.strip() != "":
+                    tokens.append(buffer)
+                buffer = ""
+            elif string[cursor] in "(":
+                if buffer.strip() != "":
+                    tokens.append(buffer)
+                buffer = ""
+                cur = cursor + 1
+                while string[cur] not in ")":
+                    cur += 1
+
+                tokens.append(string[cursor+1:cur])
+                cursor = cur + 1
+            elif string[cursor] in "#":
+                if buffer.strip() != "":
+                    tokens.append(buffer)
+                buffer = ""
+                while string[cursor] not in "\n":
+                    cursor += 1
+            elif string[cursor:cursor+2] in "/*":
+                if buffer.strip() != "":
+                    tokens.append(buffer)
+                buffer = ""
+                while string[cursor:cursor+2] not in "*/":
+                    cursor += 1
+                cursor += 1
+            else:
+                buffer += string[cursor]
+            cursor += 1
+        if buffer != "":
+            tokens.append(buffer)
+            
+        tokens = [i.strip() for i in tokens]
+        tokens = list(filter(lambda x: x != "", tokens))
+
+        print(tokens)
+        
+        build_program(tokens, p)
+
+        p.interpret()
+
+        # n, arr = build_exp(["+", "*", "2", "i", "+", "*", "3", "j", "i"], robot)
+        # print(n.left)
+        # print(n.right)
+        # print(n.left.left)
+        # print(n.left.right)
+        # print(n.right.left)
+        # print(n.right.right)
+        # print(n.right.left.left)
+        # print(n.right.left.right)
+
+
+
+        

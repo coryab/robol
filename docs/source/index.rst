@@ -10,6 +10,7 @@ Welcome to IN3040 Obligatory Assignment 1's documentation!
     :maxdepth: 2
     :caption: Contents:
     
+    usage
     design
     interfaces
     enums

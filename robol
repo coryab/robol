@@ -1,5 +1,7 @@
 #!/bin/env python
 
+from typing import List
+
 from robol_lang import *
 
 import sys
@@ -9,7 +11,7 @@ def build_exp(arr):
         if " " in arr[0]:
             arr = arr[0].split() + arr[1:]
 
-        if arr[0] in "*-+":
+        if arr[0] in "*-+=<>":
             bin_op = None
             match arr[0]:
                 case "*":
@@ -18,24 +20,16 @@ def build_exp(arr):
                     bin_op = BinaryOp.MINUS
                 case "+":
                     bin_op = BinaryOp.PLUS
-
-            left, rest_arr = helper(arr[1:])
-            right, rest = helper(rest_arr)
-            return ArithmeticExp(bin_op, left, right), rest
-        elif arr[0] in "<>=":
-            bin_op = None
-            match arr[0]:
                 case "<":
                     bin_op = BinaryOp.LESS
                 case ">":
                     bin_op = BinaryOp.GREATER
                 case "=":
                     bin_op = BinaryOp.EQUALS
-            
+
             left, rest_arr = helper(arr[1:])
             right, rest = helper(rest_arr)
-            return BoolExp(bin_op, left, right), rest
-       
+            return ArithmeticExp(bin_op, left, right), rest
         else:
             n = arr[0]
             res = None
@@ -50,7 +44,12 @@ def build_exp(arr):
     return helper(arr)
 
        
-def build_program(tokens: List, p: Program):
+def build_program(tokens: List):
+    
+    program = {
+        "grid": None,
+        "statements": []
+    }
 
     while tokens:
         # Match
@@ -59,12 +58,12 @@ def build_program(tokens: List, p: Program):
         match current:
             case "size":
                 dims = tokens.pop(0).split("*")
-                p.add_grid(Grid(NumberExp(dims[0]), NumberExp(dims[1])))
+                program["grid"] = Grid(NumberExp(dims[0]), NumberExp(dims[1]))
             case "let":
                 binder = tokens.pop(0)
                 tokens.pop(0)
                 val = tokens.pop(0)
-                p.add_statement(
+                program["statements"].append(
                         Binding(
                             Identifier(binder),
                             NumberExp(val)
@@ -72,14 +71,28 @@ def build_program(tokens: List, p: Program):
                 )
             case "start":
                 nums = tokens.pop(0).split(",")
-                p.add_statement(Start(NumberExp(nums[0]), NumberExp(nums[1])))
+                east = None
+                north = None
+
+                try:
+                    east = NumberExp(int(nums[0]))
+                except:
+                    east = Identifier(nums[0])
+
+                
+                try:
+                    north = NumberExp(int(nums[1]))
+                except:
+                    north = Identifier(nums[1])
+
+                program["statements"].append(Start(east, north))
             case "turn":
                 d = Direction.CLOCKWISE if tokens.pop(0) == "clockwise" else\
                         Direction.COUNTERCLOCKWISE
-                p.add_statement(Turn(d))
+                program["statements"].append(Turn(d))
             case "step":
                 exp, arr = build_exp(tokens)
-                p.add_statement(Step(exp))
+                program["statements"].append(Step(exp))
                 tokens = arr
             case "do":
                 arr = []
@@ -96,29 +109,25 @@ def build_program(tokens: List, p: Program):
                         break
                     arr.append(token)
                     token = tokens.pop(0)
+                print(arr)
                 l = Loop()
-                build_program(arr, l)
+                p = build_program(arr)
+                l.statements = p["statements"]
                 tokens.pop(0)
                 exp, res_arr = build_exp(tokens)
-                l.condition = exp
+                l.condition = BoolExp(exp)
                 tokens = res_arr
-                p.add_statement(l)
+                program["statements"].append(l)
 
             case s if "--" in s or "++" in s:
                 assign = Assign.INC if "++" in s else Assign.DEC
-                p.add_statement(Assignment(Identifier(s[0]), assign))
+                program["statements"].append(Assignment(Identifier(s[0]), assign))
             case "stop":
-                p.add_statement(Stop())
+                program["statements"].append(Stop())
+    return program
 
 
-
-if __name__ == "__main__":
-
-    p: Program = Program()
-    
-    p.add_robot(Robot())
-
-    statements = p.add_statement
+def tokenize():
 
     with open(sys.argv[1], "r") as f:
         string = f.read()
@@ -162,23 +171,21 @@ if __name__ == "__main__":
             
         tokens = [i.strip() for i in tokens]
         tokens = list(filter(lambda x: x != "", tokens))
-
-        print(tokens)
         
-        build_program(tokens, p)
+        return tokens
 
-        p.interpret()
+if __name__ == "__main__":
 
-        # n, arr = build_exp(["+", "*", "2", "i", "+", "*", "3", "j", "i"], robot)
-        # print(n.left)
-        # print(n.right)
-        # print(n.left.left)
-        # print(n.left.right)
-        # print(n.right.left)
-        # print(n.right.right)
-        # print(n.right.left.left)
-        # print(n.right.left.right)
+    
+    tokens = tokenize()
 
+    print(tokens)
+    
+    program = build_program(tokens)
 
+    p: Program = Program(program["grid"], Robot())
 
-        
+    p.robot.statements = program["statements"]
+
+    p.interpret()
+

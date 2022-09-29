@@ -12,11 +12,7 @@ class TestCode:
     def test1(self):
 
 
-        p: Program = Program()
-
-        p.add_robot(Robot())
-
-        p.add_grid(Grid(NumberExp(64), NumberExp(64)))
+        p: Program = Program(Grid(NumberExp(64), NumberExp(64)), Robot())
 
         p.add_statement(Start(NumberExp(23), NumberExp(30)))
         p.add_statement(Turn(Direction.CLOCKWISE))
@@ -36,11 +32,8 @@ class TestCode:
 
     def test2(self):
 
-        p: Program = Program()
+        p: Program = Program(Grid(NumberExp(64), NumberExp(64)), Robot())
 
-        p.add_robot(Robot())
-
-        p.add_grid(Grid(NumberExp(64), NumberExp(64)))
         p.add_statement(Binding(Identifier("i"), NumberExp(5)))
         p.add_statement(Binding(Identifier("j"), NumberExp(3)))
         p.add_statement(Start(NumberExp(23), NumberExp(6)))
@@ -84,11 +77,7 @@ class TestCode:
 
     def test3(self):
         
-        p: Program = Program()
-
-        p.add_robot(Robot())
-
-        p.add_grid(Grid(NumberExp(64), NumberExp(64)))
+        p: Program = Program(Grid(NumberExp(64), NumberExp(64)), Robot())
 
         p.add_statement(Binding(Identifier("i"), NumberExp(5)))
         p.add_statement(Binding(Identifier("j"), NumberExp(3)))
@@ -111,7 +100,7 @@ class TestCode:
         loop = Loop()
         loop.add_statement(Step(Identifier("j")))
         loop.add_statement(Assignment(Identifier("j"), Assign.DEC))
-        loop.condition = BoolExp(BinaryOp.GREATER, Identifier("j"), NumberExp(1))
+        loop.condition = BoolExp(ArithmeticExp(BinaryOp.GREATER, Identifier("j"), NumberExp(1)))
         p.add_statement(loop)
 
         p.add_statement(Stop())
@@ -121,18 +110,14 @@ class TestCode:
 
     def test4(self):
 
-        p: Program = Program()
-
-        p.add_robot(Robot())
-
-        p.add_grid(Grid(NumberExp(64), NumberExp(64)))
+        p: Program = Program(Grid(NumberExp(64), NumberExp(64)), Robot())
 
         p.add_statement(Binding(Identifier("i"), NumberExp(8)))
         p.add_statement(Start(NumberExp(1), NumberExp(1)))
 
         loop = Loop()
         loop.add_statement(Step(Identifier("i")))
-        loop.condition = BoolExp(BinaryOp.LESS, Identifier("i"), NumberExp(100))
+        loop.condition = BoolExp(ArithmeticExp(BinaryOp.LESS, Identifier("i"), NumberExp(100)))
         p.add_statement(loop)
         p.add_statement(Stop())
 
@@ -154,15 +139,15 @@ if __name__ == "__main__":
     tests = TestCode()
 
     match n:
-        case "test1":
+        case "1":
             tests.test1()
-        case "test2":
+        case "2":
             tests.test2()
-        case "test3":
+        case "3":
             tests.test3()
-        case "test4":
+        case "4":
             tests.test4()
-        case "test_all":
+        case "all":
             tests.test_all()
         case _:
             raise Exception("Invalid test")

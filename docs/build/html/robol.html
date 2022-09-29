@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Robol &mdash; IN3040 Obligatory Assignment 1 1.0.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Statements" href="statements.html" />
+    <link rel="prev" title="Enums" href="enums.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> IN3040 Obligatory Assignment 1
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="design.html">Design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="interfaces.html">Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="enums.html">Enums</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Robol</a></li>
+<li class="toctree-l1"><a class="reference internal" href="statements.html">Statements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="expressions.html">Expressions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">IN3040 Obligatory Assignment 1</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Robol</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/robol.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-robol_lang.robol">
+<span id="robol"></span><h1>Robol<a class="headerlink" href="#module-robol_lang.robol" title="Permalink to this headline"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="robol_lang.robol.Binding">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">robol_lang.robol.</span></span><span class="sig-name descname"><span class="pre">Binding</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ident</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="expressions.html#robol_lang.expressions.Identifier" title="robol_lang.expressions.Identifier"><span class="pre">Identifier</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">exp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="interfaces.html#robol_lang.interfaces.Expression" title="robol_lang.interfaces.Expression"><span class="pre">Expression</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#robol_lang.robol.Binding" title="Permalink to this definition"></a></dt>
+<dd><p>Class that contains an identifier and the expression to bind to it.</p>
+<dl>
+<dt>Attributes:</dt><dd><p>ident (Identifier): The identifier of the binding</p>
+<p>exp (Expression): The expression that will be bound to the identifier.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="robol_lang.robol.Binding.interpret">
+<span class="sig-name descname"><span class="pre">interpret</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#robol_lang.robol.Binding.interpret" title="Permalink to this definition"></a></dt>
+<dd><p>Binds a value to an identifier.</p>
+<p>Interprets ident and exp, and inserts the expression into the bindings
+dictionary of the robot with the identifier as the key.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="robol_lang.robol.Grid">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">robol_lang.robol.</span></span><span class="sig-name descname"><span class="pre">Grid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">east</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="interfaces.html#robol_lang.interfaces.Expression" title="robol_lang.interfaces.Expression"><span class="pre">Expression</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">north</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="interfaces.html#robol_lang.interfaces.Expression" title="robol_lang.interfaces.Expression"><span class="pre">Expression</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#robol_lang.robol.Grid" title="Permalink to this definition"></a></dt>
+<dd><p>Class that contains the dimensions of the grid.</p>
+<p>This defines the space that the robot is allowed to travel on.</p>
+<dl>
+<dt>Attributes:</dt><dd><p>east (Expression): How far east the grid goes.</p>
+<p>north (Expression): How far north the grid goes.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="robol_lang.robol.Grid.interpret">
+<span class="sig-name descname"><span class="pre">interpret</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#robol_lang.robol.Grid.interpret" title="Permalink to this definition"></a></dt>
+<dd><p>Interpret both expressions.</p>
+<p>The result of the interpretation of the expression will be put on the
+stack and the class that called this interpret method will then be
+able to retrieve them by popping the stack.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="robol_lang.robol.Program">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">robol_lang.robol.</span></span><span class="sig-name descname"><span class="pre">Program</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">grid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#robol_lang.robol.Grid" title="robol_lang.robol.Grid"><span class="pre">robol_lang.robol.Grid</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">robot</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#robol_lang.robol.Robot" title="robol_lang.robol.Robot"><span class="pre">robol_lang.robol.Robot</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#robol_lang.robol.Program" title="Permalink to this definition"></a></dt>
+<dd><p>Class that contains all components necessary to run.</p>
+<p>This is the starting point of a robol program, and is necessary in order
+for a program to work.</p>
+<dl>
+<dt>Attributes:</dt><dd><p>grid (Grid): The grid that the robot will move on.</p>
+<p>robot (Robot): The robot itself.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="robol_lang.robol.Program.interpret">
+<span class="sig-name descname"><span class="pre">interpret</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#robol_lang.robol.Program.interpret" title="Permalink to this definition"></a></dt>
+<dd><p>Calls the interpret method of the robot.</p>
+<p>Before calling the interpret method of the robot, the method adds a
+reference of the program to the robot, and a reference of the robot
+to the grid.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="robol_lang.robol.Robot">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">robol_lang.robol.</span></span><span class="sig-name descname"><span class="pre">Robot</span></span><a class="headerlink" href="#robol_lang.robol.Robot" title="Permalink to this definition"></a></dt>
+<dd><p>Class that interprets interpretables and moves around the grid.</p>
+<p>This is the heart of the program. The Robot class holds almost all the
+information of the program and moves on the grid according to what the
+interpretables interpret.</p>
+<dl>
+<dt>Attributes:</dt><dd><p>position (Dict): The current position of the robot.</p>
+<p>orientation (Orientation): The current orientation of the robot.</p>
+<p>bindings (Dict): The bindings of the robot.</p>
+<p>interpretables (List): A list of interpretable instances.</p>
+<p>stack (List): The robot’s stack to push and pop values.</p>
+<p>program (Program): A reference to the program.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="robol_lang.robol.Robot.interpret">
+<span class="sig-name descname"><span class="pre">interpret</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#robol_lang.robol.Robot.interpret" title="Permalink to this definition"></a></dt>
+<dd><p>Interprets each interpretable in interpretables.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="robol_lang.robol.Start">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">robol_lang.robol.</span></span><span class="sig-name descname"><span class="pre">Start</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">east</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="interfaces.html#robol_lang.interfaces.Expression" title="robol_lang.interfaces.Expression"><span class="pre">Expression</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">north</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="interfaces.html#robol_lang.interfaces.Expression" title="robol_lang.interfaces.Expression"><span class="pre">Expression</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#robol_lang.robol.Start" title="Permalink to this definition"></a></dt>
+<dd><p>Class that contains the starting point of the robot.</p>
+<dl>
+<dt>Attributes:</dt><dd><p>east (Expression): How far east the robot should start.</p>
+<p>north (Expression): How far north the robot should start.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="robol_lang.robol.Start.interpret">
+<span class="sig-name descname"><span class="pre">interpret</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#robol_lang.robol.Start.interpret" title="Permalink to this definition"></a></dt>
+<dd><p>Interprets east and west.</p>
+<p>This interprets east and west, and inserts the result into the position
+dictionary of the robot.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="enums.html" class="btn btn-neutral float-left" title="Enums" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="statements.html" class="btn btn-neutral float-right" title="Statements" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Cory Balaton.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

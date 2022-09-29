@@ -5,6 +5,7 @@ from enum import Enum, unique
 
 from robol_lang.interfaces import Robol
 from robol_lang.expressions import Identifier
+from robol_lang.enums import Orientation
 
 if TYPE_CHECKING:
     from robol_lang.interfaces import Statement, Expression
@@ -13,6 +14,9 @@ if TYPE_CHECKING:
 class Program(Robol):
     """ Class that contains all components necessary to run.
 
+    This is the starting point of a robol program, and is necessary in order
+    for a program to work.
+
     Attributes:
         grid (Grid): The grid that the robot will move on.
         
@@ -20,13 +24,17 @@ class Program(Robol):
     """
 
     def __init__(self, grid: Grid, robot: Robot) -> None:
-        """ Sets attributes and references."""
+        """ Sets attributes."""
 
         self.grid: Grid = grid 
         self.robot: Robot = robot 
 
     def interpret(self) -> None:
         """ Calls the interpret method of the robot.
+
+        Before calling the interpret method of the robot, the method adds a
+        reference of the program to the robot, and a reference of the robot
+        to the grid.
 
         Returns:
             None
@@ -47,16 +55,32 @@ class Program(Robol):
         """
 
         self.grid.robot = self.robot
-        self.robot.p = self
+        self.robot.program = self
 
     def add_statement(self, s: Union[Binding, Start, Statement]):
         s.robot = self.robot
-        self.robot.statements.append(s)
+        self.robot.interpretables.append(s)
 
 
 class Robot(Robol):
-    """ Class that interprets statements and executes them.
+    """ Class that interprets interpretables and moves around the grid.
 
+    This is the heart of the program. The Robot class holds almost all the
+    information of the program and moves on the grid according to what the
+    interpretables interpret.
+    
+    Attributes:
+        position (Dict): The current position of the robot.
+        
+        orientation (Orientation): The current orientation of the robot.
+        
+        bindings (Dict): The bindings of the robot.
+        
+        interpretables (List): A list of interpretable instances.
+        
+        stack (List): The robot's stack to push and pop values.
+        
+        program (Program): A reference to the program.
     """
 
     def __init__(self):
@@ -66,11 +90,11 @@ class Robot(Robol):
                 "east": 0,
                 "north": 0
                 }
-        self.direction = 0
+        self.orientation = Orientation.EAST
         self.bindings = {}
-        self.statements = []
+        self.interpretables = []
         self.stack = []
-        self.p = None
+        self.program = None
 
 
     def _add_references(self) -> None:
@@ -83,12 +107,12 @@ class Robot(Robol):
             None
         """
 
-        for statement in self.statements:
-            statement.robot = self
+        for interpretable in self.interpretables:
+            interpretable.robot = self
 
 
     def interpret(self) -> None:
-        """ Interprets each statement in statements
+        """ Interprets each interpretable in interpretables.
 
         Returns:
             None
@@ -96,14 +120,14 @@ class Robot(Robol):
 
         self._add_references()
 
-        for statement in self.statements:
-            statement.interpret()
+        for interpretable in self.interpretables:
+            interpretable.interpret()
 
 
 class Grid(Robol):
     """ Class that contains the dimensions of the grid.
 
-    Grid contains the dimensions of the grid taht the robot can move around on.
+    This defines the space that the robot is allowed to travel on.
 
     Attributes:
         east (Expression): How far east the grid goes.
@@ -150,6 +174,7 @@ class Start(Robol):
 
     Attributes:
         east (Expression): How far east the robot should start.
+        
         north (Expression): How far north the robot should start.
     """
 
@@ -199,10 +224,11 @@ class Start(Robol):
 
 
 class Binding(Robol):
-    """ Class that contains a binding and the expression to bind.
+    """ Class that contains an identifier and the expression to bind to it.
 
     Attributes:
         ident (Identifier): The identifier of the binding
+        
         exp (Expression): The expression that will be bound to the identifier.
     """
 
@@ -224,10 +250,10 @@ class Binding(Robol):
         self.exp.robot = self.robot
 
     def interpret(self):
-        """ Interprets ident and exp, and then binds them.
+        """ Binds a value to an identifier.
 
-        This interprets ident and exp, and inserts the result into the bindings
-        dictionary of the robot.
+        Interprets ident and exp, and inserts the expression into the bindings
+        dictionary of the robot with the identifier as the key.
 
         Returns:
             None

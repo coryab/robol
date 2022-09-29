@@ -1,9 +1,9 @@
 from __future__ import annotations
 from abc import abstractmethod
-from typing import TYPE_CHECKING
+from typing import Union, TYPE_CHECKING
 
 from robol_lang.interfaces import Statement
-from robol_lang.enums import Assign, Direction
+from robol_lang.enums import Assign, Direction, Orientation
 from robol_lang.expressions import Identifier
 
 
@@ -64,13 +64,14 @@ class Loop(Statement):
 
     Attributes:
         statements (Statements): The set of statements inside the loop.
+        
         condition (BoolExp): The condition for the loop to continue looping.
     """
 
     def __init__(self) -> None:
         """ Sets attributes and references"""
 
-        self.statements = []
+        self.interpretables = []
         self.condition = None
         self.robot: Robot = None
    
@@ -83,8 +84,8 @@ class Loop(Statement):
    
         self.condition.robot = self.robot
 
-        for statement in self.statements:
-            statement.robot = self.robot
+        for interpretable in self.interpretables:
+            interpretable.robot = self.robot
 
     def interpret(self) -> None:
         """ Interprets the statements in the loop.
@@ -99,16 +100,16 @@ class Loop(Statement):
         self._add_references()
 
         while True:
-            for statement in self.statements:
-                statement.interpret()
+            for interpretable in self.interpretables:
+                interpretable.interpret()
 
             self.condition.interpret()
             bool_val = self.robot.stack.pop()
             if not bool_val:
                 break
 
-    def add_statement(self, s: Statement):
-        self.statements.append(s)
+    def add_statement(self, i: Union[Binding, Start, Statement]):
+        self.interpretables.append(i)
 
 
 class Stop(Statement):
@@ -142,7 +143,7 @@ class Turn(Statement):
         self.robot: Robot = None
 
     def interpret(self) -> None:
-        """ Sets the new direction of the robot.
+        """ Sets the new orientation of the robot.
 
         Returns:
             None
@@ -150,10 +151,10 @@ class Turn(Statement):
 
         match self.direction:
             case Direction.CLOCKWISE:
-                self.robot.direction = (self.robot.direction + 1) % 4
+                self.robot.orientation = self.robot.orientation.succ()
             case Direction.COUNTERCLOCKWISE:
-                self.robot.direction = (self.robot.direction - 1) % 4
-        print(f"Direction: {self.robot.direction}")
+                self.robot.orientation = self.robot.orientation.pred()
+        print(f"Direction: {self.robot.orientation}")
 
 
 class Step(Statement):
@@ -161,7 +162,7 @@ class Step(Statement):
 
     Attributes:
         exp (Expression): The expression that evaluates how many steps should
-            be taken.
+        be taken.
     """
 
     def __init__(self, exp: Expression) -> None:
@@ -197,25 +198,25 @@ class Step(Statement):
         if type(self.exp) is Identifier:
             exp = self.robot.bindings[exp]
 
-        self.robot.p.grid.interpret()
+        self.robot.program.grid.interpret()
         grid_east = self.robot.stack.pop()
         grid_north = self.robot.stack.pop()
 
         print(f"Steps: {exp}")
-        match self.robot.direction:
-            case 0:
+        match self.robot.orientation:
+            case Orientation.EAST:
                 if self.robot.position["east"] + exp > grid_east:
                     raise Exception("The bounds of the grid have been overstepped")
                 self.robot.position["east"] += exp
-            case 1:
+            case Orientation.SOUTH:
                 if self.robot.position["north"] - exp < 0:
                     raise Exception("The bounds of the grid have been overstepped")
                 self.robot.position["north"] -= exp
-            case 2:
+            case Orientation.WEST:
                 if self.robot.position["east"] - exp < 0:
                     raise Exception("The bounds of the grid have been overstepped")
                 self.robot.position["east"] -= exp
-            case 3:
+            case Orientation.NORTH:
                 if self.robot.position["north"] + exp > grid_north:
                     raise Exception("The bounds of the grid have been overstepped")
                 self.robot.position["north"] += exp

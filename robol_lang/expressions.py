@@ -17,7 +17,9 @@ class ArithmeticExp(Expression):
 
     Attributes:
         op (BinaryOp): The binary operation of the expression.
+        
         left (Expression): The left side of the expression.
+        
         right (Expression): The right side of the expression.
     """
 

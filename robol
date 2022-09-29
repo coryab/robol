@@ -48,7 +48,7 @@ def build_program(tokens: List):
     
     program = {
         "grid": None,
-        "statements": []
+        "interpretables": []
     }
 
     while tokens:
@@ -63,7 +63,7 @@ def build_program(tokens: List):
                 binder = tokens.pop(0)
                 tokens.pop(0)
                 val = tokens.pop(0)
-                program["statements"].append(
+                program["interpretables"].append(
                         Binding(
                             Identifier(binder),
                             NumberExp(val)
@@ -85,14 +85,14 @@ def build_program(tokens: List):
                 except:
                     north = Identifier(nums[1])
 
-                program["statements"].append(Start(east, north))
+                program["interpretables"].append(Start(east, north))
             case "turn":
                 d = Direction.CLOCKWISE if tokens.pop(0) == "clockwise" else\
                         Direction.COUNTERCLOCKWISE
-                program["statements"].append(Turn(d))
+                program["interpretables"].append(Turn(d))
             case "step":
                 exp, arr = build_exp(tokens)
-                program["statements"].append(Step(exp))
+                program["interpretables"].append(Step(exp))
                 tokens = arr
             case "do":
                 arr = []
@@ -112,18 +112,18 @@ def build_program(tokens: List):
                 print(arr)
                 l = Loop()
                 p = build_program(arr)
-                l.statements = p["statements"]
+                l.interpretables = p["interpretables"]
                 tokens.pop(0)
                 exp, res_arr = build_exp(tokens)
                 l.condition = BoolExp(exp)
                 tokens = res_arr
-                program["statements"].append(l)
+                program["interpretables"].append(l)
 
             case s if "--" in s or "++" in s:
                 assign = Assign.INC if "++" in s else Assign.DEC
-                program["statements"].append(Assignment(Identifier(s[0]), assign))
+                program["interpretables"].append(Assignment(Identifier(s[0]), assign))
             case "stop":
-                program["statements"].append(Stop())
+                program["interpretables"].append(Stop())
     return program
 
 
@@ -185,7 +185,7 @@ if __name__ == "__main__":
 
     p: Program = Program(program["grid"], Robot())
 
-    p.robot.statements = program["statements"]
+    p.robot.interpretables = program["interpretables"]
 
     p.interpret()
 

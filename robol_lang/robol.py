@@ -29,6 +29,19 @@ class Program(Robol):
         self.grid: Grid = grid 
         self.robot: Robot = robot 
 
+    def _add_references(self) -> None:
+        """ Adds references to the grid and robot.
+
+        The robot needs a reference to the program, and the grid needs a
+        reference to the robot.
+
+        Returns:
+            None
+        """
+
+        self.grid.robot = self.robot
+        self.robot.program = self
+
     def interpret(self) -> None:
         """ Calls the interpret method of the robot.
 
@@ -43,23 +56,6 @@ class Program(Robol):
         self._add_references()
 
         self.robot.interpret()
-
-    def _add_references(self) -> None:
-        """ Adds references to the grid and robot.
-
-        The robot needs a reference to the program, and the grid needs a
-        reference to the robot.
-
-        Returns:
-            None
-        """
-
-        self.grid.robot = self.robot
-        self.robot.program = self
-
-    def add_statement(self, s: Union[Binding, Start, Statement]):
-        s.robot = self.robot
-        self.robot.interpretables.append(s)
 
 
 class Robot(Robol):
@@ -96,7 +92,6 @@ class Robot(Robol):
         self.stack = []
         self.program = None
 
-
     def _add_references(self) -> None:
         """ Adds a reference of the robot to each statement.
 
@@ -109,7 +104,6 @@ class Robot(Robol):
 
         for interpretable in self.interpretables:
             interpretable.robot = self
-
 
     def interpret(self) -> None:
         """ Interprets each interpretable in interpretables.

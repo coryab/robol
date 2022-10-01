@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 
+
 class Robol(ABC):
     """ This is the interface that most classes inherit from.
 
@@ -34,3 +35,4 @@ class Expression(Robol):
     @abstractmethod
     def interpret(self):
         pass
+

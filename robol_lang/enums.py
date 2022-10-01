@@ -2,11 +2,11 @@ from enum import Enum, unique
 
 
 @unique
-class Direction(Enum):
-    """ Signifies the direction Turn should turn."""
+class Assign(Enum):
+    """ Signifies if Assignment should increment or decrement."""
 
-    CLOCKWISE = 1
-    COUNTERCLOCKWISE = 2
+    INC = 1
+    DEC = 2
 
 
 @unique
@@ -22,11 +22,11 @@ class BinaryOp(Enum):
 
 
 @unique
-class Assign(Enum):
-    """ Signifies if Assignment should increment or decrement."""
+class Direction(Enum):
+    """ Signifies the direction Turn should turn."""
 
-    INC = 1
-    DEC = 2
+    CLOCKWISE = 1
+    COUNTERCLOCKWISE = 2
 
 
 @unique

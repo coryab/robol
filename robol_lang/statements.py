@@ -6,7 +6,6 @@ from robol_lang.interfaces import Statement
 from robol_lang.enums import Assign, Direction, Orientation
 from robol_lang.expressions import Identifier
 
-
 if TYPE_CHECKING:
     from robol_lang.interfaces import Expression
     from robol_lang.robol import Robot
@@ -107,9 +106,6 @@ class Loop(Statement):
             bool_val = self.robot.stack.pop()
             if not bool_val:
                 break
-
-    def add_statement(self, i: Union[Binding, Start, Statement]):
-        self.interpretables.append(i)
 
 
 class Stop(Statement):

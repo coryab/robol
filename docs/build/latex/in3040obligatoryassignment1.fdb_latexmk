@@ -1,10 +1,10 @@
 # Fdb version 3
-["makeindex in3040obligatoryassignment1.idx"] 1664493868 "in3040obligatoryassignment1.idx" "in3040obligatoryassignment1.ind" "in3040obligatoryassignment1" 1664493869
-  "in3040obligatoryassignment1.idx" 1664493869 5738 974fb7f6369f154479c64685011a211d "pdflatex"
+["makeindex in3040obligatoryassignment1.idx"] 1664611133 "in3040obligatoryassignment1.idx" "in3040obligatoryassignment1.ind" "in3040obligatoryassignment1" 1664611134
+  "in3040obligatoryassignment1.idx" 1664611134 5738 974fb7f6369f154479c64685011a211d "pdflatex"
   (generated)
   "in3040obligatoryassignment1.ilg"
   "in3040obligatoryassignment1.ind"
-["pdflatex"] 1664493868 "in3040obligatoryassignment1.tex" "in3040obligatoryassignment1.pdf" "in3040obligatoryassignment1" 1664493869
+["pdflatex"] 1664611134 "in3040obligatoryassignment1.tex" "in3040obligatoryassignment1.pdf" "in3040obligatoryassignment1" 1664611134
   "/home/coryab/.texlive2021/texmf-var/web2c/pdftex/pdflatex.fmt" 1653490233 2727070 8ab9740369116218283287e1312a789c ""
   "/usr/share/texlive/texmf-dist/fonts/enc/dvips/tex-gyre/q-ec.enc" 1529098226 2457 aaabbccba4df2a7f7371410ee4e075a3 ""
   "/usr/share/texlive/texmf-dist/fonts/enc/dvips/tex-gyre/q-ts1.enc" 1529098226 3124 3813fd4c981d99822890a2861b0d274c ""
@@ -137,13 +137,13 @@
   "/usr/share/texlive/texmf-dist/tex/latex/xcolor/xcolor.sty" 1463002160 55589 34128738f682d033422ca125f82e5d62 ""
   "/usr/share/texlive/texmf-dist/web2c/texmf.cnf" 1642711416 40136 b05acc85e8425979e52682d98a2bcacf ""
   "/usr/share/texlive/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1653485488 5132490 3b5b73be92ec3d6f4a45957a9c195358 ""
-  "in3040obligatoryassignment1.aux" 1664493869 8379 60753d9ae6099d8fbb6168e8a9f715b6 "pdflatex"
-  "in3040obligatoryassignment1.ind" 1664493868 4411 8c17712513438e4ca266ef5f64f554c8 "makeindex in3040obligatoryassignment1.idx"
-  "in3040obligatoryassignment1.out" 1664493869 1955 82ca1cf13c2c74d982491ce9020c703f "pdflatex"
-  "in3040obligatoryassignment1.tex" 1664493867 34520 83aab55312600c5abb6259f4317414b8 ""
-  "in3040obligatoryassignment1.toc" 1664493869 1301 221791dbb7e78a57501e6fe4cb8150ee "pdflatex"
+  "in3040obligatoryassignment1.aux" 1664611134 8379 60753d9ae6099d8fbb6168e8a9f715b6 "pdflatex"
+  "in3040obligatoryassignment1.ind" 1664611133 4411 8c17712513438e4ca266ef5f64f554c8 "makeindex in3040obligatoryassignment1.idx"
+  "in3040obligatoryassignment1.out" 1664611134 1955 82ca1cf13c2c74d982491ce9020c703f "pdflatex"
+  "in3040obligatoryassignment1.tex" 1664611133 34520 7af57a794136421c7849e85952a75cb9 ""
+  "in3040obligatoryassignment1.toc" 1664611134 1301 221791dbb7e78a57501e6fe4cb8150ee "pdflatex"
   "sphinx.sty" 1644846927 13262 0226aaccc1147ed884a3946fce78a6d2 ""
-  "sphinxhighlight.sty" 1664493867 6679 76d10c62e0f0661410b46f5db6118e26 ""
+  "sphinxhighlight.sty" 1664611132 6679 76d10c62e0f0661410b46f5db6118e26 ""
   "sphinxlatexadmonitions.sty" 1644846927 6238 2d867d769abf3f72abc17ef52adff78b ""
   "sphinxlatexcontainers.sty" 1644846927 901 d3a3a1b7b2547f47ade2499350b5c420 ""
   "sphinxlatexgraphics.sty" 1644846927 4840 a9578332b6f3b35e198751fb632c9b79 ""
@@ -158,7 +158,7 @@
   "sphinxlatexstyletext.sty" 1644846927 6177 c18841ce3fafc366cd3b145f8faa4c37 ""
   "sphinxlatextables.sty" 1644846927 21848 2827eb0b11b99b185a8b77317d3e131c ""
   "sphinxmanual.cls" 1644846927 4241 7b0d7a37df7b5715fb0dbd585c52ecdb ""
-  "sphinxmessages.sty" 1664493867 745 3f5fcd6cdd7964ed608767954a8ced6f ""
+  "sphinxmessages.sty" 1664611133 745 3f5fcd6cdd7964ed608767954a8ced6f ""
   "sphinxoptionsgeometry.sty" 1644846927 2061 47bb34b8ed8a78823eb0c886abfb9f4d ""
   "sphinxoptionshyperref.sty" 1644846927 1094 79beb8b8a3f10784f8cce804e0f9d3aa ""
   "sphinxpackagefootnote.sty" 1644846927 13248 e2c77871396275ccf592403f8130f6f2 ""

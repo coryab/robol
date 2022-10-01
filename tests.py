@@ -14,18 +14,21 @@ class TestCode:
 
         p: Program = Program(Grid(NumberExp(64), NumberExp(64)), Robot())
 
-        p.add_statement(Start(NumberExp(23), NumberExp(30)))
-        p.add_statement(Turn(Direction.CLOCKWISE))
-        p.add_statement(Turn(Direction.CLOCKWISE))
-        p.add_statement(Step(NumberExp(15)))
-        p.add_statement(Turn(Direction.COUNTERCLOCKWISE))
-        p.add_statement(Step(NumberExp(15)))
-        p.add_statement(Turn(Direction.COUNTERCLOCKWISE))
-        p.add_statement(Step(ArithmeticExp(BinaryOp.PLUS, NumberExp(2), NumberExp(3))))
-        p.add_statement(Turn(Direction.COUNTERCLOCKWISE))
-        p.add_statement(Step(ArithmeticExp(BinaryOp.PLUS, NumberExp(17), NumberExp(20))))
-        p.add_statement(Stop())
+        interpretables =  []
 
+        interpretables.append(Start(NumberExp(23), NumberExp(30)))
+        interpretables.append(Turn(Direction.CLOCKWISE))
+        interpretables.append(Turn(Direction.CLOCKWISE))
+        interpretables.append(Step(NumberExp(15)))
+        interpretables.append(Turn(Direction.COUNTERCLOCKWISE))
+        interpretables.append(Step(NumberExp(15)))
+        interpretables.append(Turn(Direction.COUNTERCLOCKWISE))
+        interpretables.append(Step(ArithmeticExp(BinaryOp.PLUS, NumberExp(2), NumberExp(3))))
+        interpretables.append(Turn(Direction.COUNTERCLOCKWISE))
+        interpretables.append(Step(ArithmeticExp(BinaryOp.PLUS, NumberExp(17), NumberExp(20))))
+        interpretables.append(Stop())
+        
+        p.robot.interpretables = interpretables
 
         p.interpret()
 
@@ -34,15 +37,17 @@ class TestCode:
 
         p: Program = Program(Grid(NumberExp(64), NumberExp(64)), Robot())
 
-        p.add_statement(Binding(Identifier("i"), NumberExp(5)))
-        p.add_statement(Binding(Identifier("j"), NumberExp(3)))
-        p.add_statement(Start(NumberExp(23), NumberExp(6)))
-        p.add_statement(Turn(Direction.COUNTERCLOCKWISE))
-        p.add_statement(Step(ArithmeticExp(BinaryOp.MULT, NumberExp(3), Identifier("i"))))
-        p.add_statement(Turn(Direction.CLOCKWISE))
-        p.add_statement(Step(NumberExp(15)))
-        p.add_statement(Turn(Direction.CLOCKWISE))
-        p.add_statement(Step(
+        interpretables = []
+
+        interpretables.append(Binding(Identifier("i"), NumberExp(5)))
+        interpretables.append(Binding(Identifier("j"), NumberExp(3)))
+        interpretables.append(Start(NumberExp(23), NumberExp(6)))
+        interpretables.append(Turn(Direction.COUNTERCLOCKWISE))
+        interpretables.append(Step(ArithmeticExp(BinaryOp.MULT, NumberExp(3), Identifier("i"))))
+        interpretables.append(Turn(Direction.CLOCKWISE))
+        interpretables.append(Step(NumberExp(15)))
+        interpretables.append(Turn(Direction.CLOCKWISE))
+        interpretables.append(Step(
             ArithmeticExp(
                 BinaryOp.MINUS,
                 ArithmeticExp(BinaryOp.MINUS, NumberExp(12), Identifier("i")),
@@ -50,8 +55,8 @@ class TestCode:
                 )
             )
         )
-        p.add_statement(Turn(Direction.CLOCKWISE))
-        p.add_statement(Step(
+        interpretables.append(Turn(Direction.CLOCKWISE))
+        interpretables.append(Step(
             ArithmeticExp(
                 BinaryOp.PLUS,
                 ArithmeticExp(
@@ -70,8 +75,10 @@ class TestCode:
                 ),
             ),
         ))
-        p.add_statement(Stop())
+        interpretables.append(Stop())
         
+        p.robot.interpretables = interpretables
+
         p.interpret()
 
 
@@ -79,31 +86,33 @@ class TestCode:
         
         p: Program = Program(Grid(NumberExp(64), NumberExp(64)), Robot())
 
-        p.add_statement(Binding(Identifier("i"), NumberExp(5)))
-        p.add_statement(Binding(Identifier("j"), NumberExp(3)))
-        p.add_statement(Start(NumberExp(23), NumberExp(6)))
-        p.add_statement(Turn(Direction.COUNTERCLOCKWISE))
-        p.add_statement(Step(
+        interpretables = []
+
+        interpretables.append(Binding(Identifier("i"), NumberExp(5)))
+        interpretables.append(Binding(Identifier("j"), NumberExp(3)))
+        interpretables.append(Start(NumberExp(23), NumberExp(6)))
+        interpretables.append(Turn(Direction.COUNTERCLOCKWISE))
+        interpretables.append(Step(
             ArithmeticExp(
                 BinaryOp.MULT, 
                 NumberExp(3),
                 Identifier("i"),
             )
         ))
-        p.add_statement(Turn(Direction.COUNTERCLOCKWISE))
-        p.add_statement(Step(NumberExp(15)))
-        p.add_statement(Turn(Direction.CLOCKWISE))
-        p.add_statement(Turn(Direction.CLOCKWISE))
-        p.add_statement(Step(NumberExp(4)))
-        p.add_statement(Turn(Direction.CLOCKWISE))
+        interpretables.append(Turn(Direction.COUNTERCLOCKWISE))
+        interpretables.append(Step(NumberExp(15)))
+        interpretables.append(Turn(Direction.CLOCKWISE))
+        interpretables.append(Turn(Direction.CLOCKWISE))
+        interpretables.append(Step(NumberExp(4)))
+        interpretables.append(Turn(Direction.CLOCKWISE))
 
         loop = Loop()
-        loop.add_statement(Step(Identifier("j")))
-        loop.add_statement(Assignment(Identifier("j"), Assign.DEC))
+        loop.interpretables.append(Step(Identifier("j")))
+        loop.interpretables.append(Assignment(Identifier("j"), Assign.DEC))
         loop.condition = BoolExp(ArithmeticExp(BinaryOp.GREATER, Identifier("j"), NumberExp(1)))
-        p.add_statement(loop)
+        interpretables.append(loop)
 
-        p.add_statement(Stop())
+        interpretables.append(Stop())
         
         p.interpret()
 
@@ -112,14 +121,18 @@ class TestCode:
 
         p: Program = Program(Grid(NumberExp(64), NumberExp(64)), Robot())
 
-        p.add_statement(Binding(Identifier("i"), NumberExp(8)))
-        p.add_statement(Start(NumberExp(1), NumberExp(1)))
+        interpretables = []
+
+        interpretables.append(Binding(Identifier("i"), NumberExp(8)))
+        interpretables.append(Start(NumberExp(1), NumberExp(1)))
 
         loop = Loop()
-        loop.add_statement(Step(Identifier("i")))
+        loop.interpretables.append(Step(Identifier("i")))
         loop.condition = BoolExp(ArithmeticExp(BinaryOp.LESS, Identifier("i"), NumberExp(100)))
-        p.add_statement(loop)
-        p.add_statement(Stop())
+        interpretables.append(loop)
+        interpretables.append(Stop())
+
+        p.robot.interpretables = interpretables 
 
         p.interpret()
 

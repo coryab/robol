@@ -10,7 +10,6 @@ from robol_lang.enums import Orientation
 if TYPE_CHECKING:
     from robol_lang.interfaces import Statement, Expression
 
-
 class Program(Robol):
     """ Class that contains all components necessary to run.
 

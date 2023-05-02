@@ -4,7 +4,6 @@ import sys
 
 from robol_lang import *
 
-
 class TestCode:
     def __init__(self):
         pass
@@ -14,7 +13,7 @@ class TestCode:
 
         p: Program = Program(Grid(NumberExp(64), NumberExp(64)), Robot())
 
-        interpretables =  []
+        interpretables = []
 
         interpretables.append(Start(NumberExp(23), NumberExp(30)))
         interpretables.append(Turn(Direction.CLOCKWISE))

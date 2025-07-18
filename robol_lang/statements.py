@@ -1,6 +1,5 @@
 from __future__ import annotations
-from abc import abstractmethod
-from typing import Union, TYPE_CHECKING
+from typing import TYPE_CHECKING
 
 from robol_lang.interfaces import Statement
 from robol_lang.enums import Assign, Direction, Orientation
@@ -199,6 +198,7 @@ class Step(Statement):
         grid_north = self.robot.stack.pop()
 
         print(f"Steps: {exp}")
+
         match self.robot.orientation:
             case Orientation.EAST:
                 if self.robot.position["east"] + exp > grid_east:

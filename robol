@@ -1,18 +1,29 @@
 #!/bin/env python
 
-from typing import List
+import sys
+from typing import Dict, List, Tuple
 
 from robol_lang import *
 
-import sys
 
 def build_exp(arr):
-    def helper(arr):
+    """A function that helps building an arithmetic expression.
+
+    Args:
+        arr (List): A list of tokens.
+
+    Returns:
+        A tuple containing an ArithmeticExp, NumberExp or Identifier class and 
+        the tail of the list of tokens.
+    """
+
+    def helper(arr) -> Tuple[ArithmeticExp | NumberExp | Identifier, List]:
         if " " in arr[0]:
             arr = arr[0].split() + arr[1:]
 
         if arr[0] in "*-+=<>":
             bin_op = None
+
             match arr[0]:
                 case "*":
                     bin_op = BinaryOp.MULT
@@ -29,10 +40,12 @@ def build_exp(arr):
 
             left, rest_arr = helper(arr[1:])
             right, rest = helper(rest_arr)
+
             return ArithmeticExp(bin_op, left, right), rest
         else:
             n = arr[0]
             res = None
+
             try:
                 n = int(n)
                 res = NumberExp(n)
@@ -43,18 +56,22 @@ def build_exp(arr):
 
     return helper(arr)
 
-       
-def build_program(tokens: List):
-    
-    program = {
-        "grid": None,
-        "interpretables": []
-    }
+
+def build_program(tokens: List) -> Dict:
+    """Build the program by associating tokens with corresponding classes.
+        
+    Args:
+        tokens (List): A list of tokens.
+
+    Returns:
+        A dictionary containing a 'grid' and 'interpretables' entry.
+    """
+
+    program = {"grid": None, "interpretables": []}
 
     while tokens:
-        # Match
-        # print(tokens)
         current = tokens.pop(0)
+
         match current:
             case "size":
                 dims = tokens.pop(0).split("*")
@@ -64,10 +81,7 @@ def build_program(tokens: List):
                 tokens.pop(0)
                 val = tokens.pop(0)
                 program["interpretables"].append(
-                        Binding(
-                            Identifier(binder),
-                            NumberExp(val)
-                        )
+                    Binding(Identifier(binder), NumberExp(val))
                 )
             case "start":
                 nums = tokens.pop(0).split(",")
@@ -79,7 +93,6 @@ def build_program(tokens: List):
                 except:
                     east = Identifier(nums[0])
 
-                
                 try:
                     north = NumberExp(int(nums[1]))
                 except:
@@ -87,8 +100,11 @@ def build_program(tokens: List):
 
                 program["interpretables"].append(Start(east, north))
             case "turn":
-                d = Direction.CLOCKWISE if tokens.pop(0) == "clockwise" else\
-                        Direction.COUNTERCLOCKWISE
+                d = (
+                    Direction.CLOCKWISE
+                    if tokens.pop(0) == "clockwise"
+                    else Direction.COUNTERCLOCKWISE
+                )
                 program["interpretables"].append(Turn(d))
             case "step":
                 exp, arr = build_exp(tokens)
@@ -99,16 +115,18 @@ def build_program(tokens: List):
                 tokens.pop(0)
                 token = tokens.pop(0)
                 open_braces = 1
+
                 while True:
                     if token == "}":
                         open_braces -= 1
                     elif token == "{":
                         open_braces += 1
-                    
+
                     if open_braces <= 0:
                         break
                     arr.append(token)
                     token = tokens.pop(0)
+
                 print(arr)
                 l = Loop()
                 p = build_program(arr)
@@ -124,22 +142,32 @@ def build_program(tokens: List):
                 program["interpretables"].append(Assignment(Identifier(s[0]), assign))
             case "stop":
                 program["interpretables"].append(Stop())
+
     return program
 
 
-def tokenize():
+def tokenize() -> List:
+    """Tokenize the file given by the user.
+
+    Returns:
+        A list of tokens.
+    """
 
     with open(sys.argv[1], "r") as f:
         string = f.read()
 
-        cursor = 0
-        buffer = ""
-        tokens = []
+        cursor = 0  # The current position on the string array
+        buffer = ""  # A buffer that is used to build up a token
+        tokens = []  # The list of tokens in the program
+
         while cursor < len(string):
+            # Append a non-empty buffer to the tokens list when token ends
             if string[cursor] in ", \n" and buffer != "":
                 if buffer.strip() != "":
                     tokens.append(buffer)
                 buffer = ""
+
+            # Deal with parentheses
             elif string[cursor] in "(":
                 if buffer.strip() != "":
                     tokens.append(buffer)
@@ -147,40 +175,48 @@ def tokenize():
                 cur = cursor + 1
                 while string[cur] not in ")":
                     cur += 1
-
-                tokens.append(string[cursor+1:cur])
+                tokens.append(string[cursor + 1 : cur])
                 cursor = cur + 1
+
+            # Deal with comments
             elif string[cursor] in "#":
                 if buffer.strip() != "":
                     tokens.append(buffer)
                 buffer = ""
                 while string[cursor] not in "\n":
                     cursor += 1
-            elif string[cursor:cursor+2] in "/*":
+
+            # Deal with multiline comments
+            elif string[cursor : cursor + 2] in "/*":
                 if buffer.strip() != "":
                     tokens.append(buffer)
                 buffer = ""
-                while string[cursor:cursor+2] not in "*/":
+                while string[cursor : cursor + 2] not in "*/":
                     cursor += 1
                 cursor += 1
+
+            # Add letter at the current position to the buffer
             else:
                 buffer += string[cursor]
+
             cursor += 1
+
         if buffer != "":
             tokens.append(buffer)
-            
+
+        # Clean up tokens
         tokens = [i.strip() for i in tokens]
         tokens = list(filter(lambda x: x != "", tokens))
-        
+
         return tokens
+
 
 if __name__ == "__main__":
 
-    
     tokens = tokenize()
 
     print(tokens)
-    
+
     program = build_program(tokens)
 
     p: Program = Program(program["grid"], Robot())
@@ -188,4 +224,3 @@ if __name__ == "__main__":
     p.robot.interpretables = program["interpretables"]
 
     p.interpret()
-

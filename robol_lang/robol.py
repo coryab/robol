@@ -1,14 +1,12 @@
 from __future__ import annotations
-from typing import Dict, List, Union, TYPE_CHECKING
-from abc import ABC, abstractmethod
-from enum import Enum, unique
+from typing import TYPE_CHECKING
 
 from robol_lang.interfaces import Robol
 from robol_lang.expressions import Identifier
 from robol_lang.enums import Orientation
 
 if TYPE_CHECKING:
-    from robol_lang.interfaces import Statement, Expression
+    from robol_lang.interfaces import Expression
 
 
 class Program(Robol):
@@ -214,6 +212,7 @@ class Start(Robol):
                     self.robot.bindings[self.robot.stack.pop()]
         else:
             self.robot.position["north"] = self.robot.stack.pop()
+
         print(f"Start position: ({self.robot.position['east']}, {self.robot.position['north']})")
 
 

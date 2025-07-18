@@ -65,6 +65,7 @@ class ArithmeticExp(Expression):
             right = self.robot.bindings[right]
 
         out = None
+
         match self.op:
             case BinaryOp.PLUS:
                 out = left + right
